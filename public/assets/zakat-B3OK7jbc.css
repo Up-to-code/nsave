@@ -1,0 +1,1 @@
+@layer components{@keyframes zakat-calc-in{0%{opacity:0;transform:translateY(240px)}to{opacity:1;transform:translateY(0)}}.zakat-calc-in{opacity:0;animation:zakat-calc-in .7s var(--ease-out-strong, cubic-bezier(.16, 1, .3, 1)) both}}@media (prefers-reduced-motion: reduce){.zakat-calc-in{opacity:1;transform:none;animation:none}}

@@ -1,0 +1,1 @@
+@layer components{.invest-hero-image{animation:invest-hero-image-in .68s var(--ease-out-strong, cubic-bezier(.16, 1, .3, 1)) both}@keyframes invest-hero-image-in{0%{opacity:0;transform:translateY(160px)}to{opacity:1;transform:translateY(0)}}}@media (prefers-reduced-motion: reduce){.invest-hero-image{opacity:1;transform:none;animation:none}}

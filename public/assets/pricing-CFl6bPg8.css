@@ -1,0 +1,1 @@
+@layer components{@keyframes pricing-rise{0%{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}.pricing-rise{opacity:0;animation:pricing-rise .6s var(--ease-out-strong, cubic-bezier(.16, 1, .3, 1)) var(--stagger, 0ms) both}}@media (prefers-reduced-motion: reduce){.pricing-rise{opacity:1;animation:none}}
