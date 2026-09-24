@@ -18,23 +18,68 @@ function heroMs(hero: El, name: string, fallback: number) {
   return raw.endsWith('ms') ? value : value * 1000;
 }
 
-/** pending -> animating -> settled, timed from the hero's own CSS custom properties. */
+/** pending -> animating -> settled, timed from the hero's own CSS custom properties.
+ *
+ *  Faithful to the live site, whose settled state pins `.hero-load__media` to the
+ *  hero's top edge (`position: absolute; top: 0`) and lands it below the copy with
+ *  `translateY(var(--hero-drop-y, 0px))`. That var is measured at runtime, so the
+ *  scrape does not carry it: without it the media would sit at translateY(0) and
+ *  paint over the headline. Measure the flow position from the DOM itself.
+ */
 export function startHero() {
-  const hero = document.querySelector('.hero-load') as El | null;
-  if (!hero) return () => {};
-  const total =
-    heroMs(hero, '--hero-mask-ms', 800) +
-    heroMs(hero, '--hero-drop-pause-ms', 196) +
-    heroMs(hero, '--hero-drop-ms', 956);
+  const heroes = [...document.querySelectorAll('.hero-load')] as El[];
+  if (!heroes.length) return () => {};
 
-  hero.classList.remove('hero-load--pending');
-  hero.classList.add('hero-load--animating');
-  const t = window.setTimeout(() => {
-    hero.classList.remove('hero-load--animating');
-    hero.classList.add('hero-load--settled');
-    ScrollTrigger.refresh();
-  }, total + 60);
-  return () => window.clearTimeout(t);
+  const dropOf = (hero: El): number => {
+    const media = hero.querySelector('.hero-load__media') as El | null;
+    if (!media) return 0;
+    const slot = hero.querySelector('.hero-load__media-slot') as El | null;
+    const anchor =
+      (slot && slot.getBoundingClientRect().height > 0 ? slot : null) ||
+      (hero.querySelector('.hero-load__stats') as El | null) ||
+      (hero.querySelector('.hero-load__content') as El | null);
+    if (!anchor) return 0;
+    const heroTop = hero.getBoundingClientRect().top + window.scrollY;
+    const anchorTop = anchor.getBoundingClientRect().top + window.scrollY;
+    return Math.max(0, Math.round(anchorTop - heroTop));
+  };
+
+  const setDropVars = () => heroes.forEach((hero) => {
+    hero.style.setProperty('--hero-drop-y', `${dropOf(hero)}px`);
+  });
+
+  setDropVars();
+  // fonts/images change the copy height: recompute until the page is quiescent
+  let guard = 0;
+  const resync = window.setInterval(() => { setDropVars(); if (++guard > 20) window.clearInterval(resync); }, 250);
+  const onResize = () => setDropVars();
+  window.addEventListener('resize', onResize);
+  let fonts: Promise<unknown> | undefined;
+  try {
+    fonts = (document as Document & { fonts?: { ready?: Promise<unknown> } }).fonts?.ready;
+  } catch { /* older engines: interval covers it */ }
+  if (fonts) void fonts.then(() => setDropVars()).catch(() => {});
+
+  const runs = heroes.map((hero) => {
+    const total =
+      heroMs(hero, '--hero-mask-ms', 800) +
+      heroMs(hero, '--hero-drop-pause-ms', 196) +
+      heroMs(hero, '--hero-drop-ms', 956);
+    hero.classList.remove('hero-load--pending');
+    hero.classList.add('hero-load--animating');
+    const t = window.setTimeout(() => {
+      hero.classList.remove('hero-load--animating');
+      hero.classList.add('hero-load--settled');
+      ScrollTrigger.refresh();
+    }, total + 60);
+    return t;
+  });
+
+  return () => {
+    window.clearInterval(resync);
+    window.removeEventListener('resize', onResize);
+    runs.forEach((t) => window.clearTimeout(t));
+  };
 }
 
 /** Infinite marquee using the site's stats-marquee-ltr keyframes + --marquee-distance. */

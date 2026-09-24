@@ -40,7 +40,7 @@ All of it mirrors nsave's own implementation rather than approximating it:
 
 ```
 npm run dev        # http://localhost:3000 (or PORT=3001 npm run dev)
-npm run build      # static prerender of all 18 routes
+npm run build      # static prerender of all 26 routes
 npm run typecheck
 npm run inject-faq
 ```
@@ -49,6 +49,7 @@ npm run inject-faq
 
 - `Learn` in the header is a single link in nsave's markup (no dropdown to copy).
 - The mobile menu button is client-only on nsave.com, so it is absent from the
-  scraped markup; narrow viewports currently have no nav.
+  scraped markup; `wireMobileMenu` in `components/wire.ts` injects an equivalent
+  hamburger + slide-down panel below the lg breakpoint.
 - The two custom Tailwind component sets from the first attempt (`components/Header.tsx`
   and friends) are no longer referenced by any route.
