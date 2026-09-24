@@ -6,8 +6,14 @@ import Investors from '@/components/Investors';
 import Faq from '@/components/Faq';
 import Cta from '@/components/Cta';
 import Footer from '@/components/Footer';
+import HomeExact from '@/components/HomeExact';
+
+const USE_EXACT = true;
 
 export default function HomePage() {
+  if (USE_EXACT) {
+    return <HomeExact />;
+  }
   return (
     <div className="min-h-screen flex flex-col bg-white">
       <Header />
