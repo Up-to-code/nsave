@@ -5,7 +5,9 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "inject-faq": "node scripts/inject-faq.mjs",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "gsap": "^3.15.0",
