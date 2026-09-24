@@ -5,10 +5,13 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import headerHtml from './header_raw.html';
 import mainHtml from './main_raw.html';
 import footerHtml from './footer_raw.html';
+import { wire } from './wire';
 
 export default function HomeExact() {
   useEffect(() => {
     gsap.registerPlugin(ScrollTrigger);
+    const root = document.getElementById('nx') as HTMLElement | null;
+    if (root) wire(root);
     const hero = document.querySelector('.hero-load');
     if (hero) {
       hero.classList.remove('hero-load--pending');
@@ -18,15 +21,13 @@ export default function HomeExact() {
         hero.classList.add('hero-load--settled');
       }, 2200);
       (window as unknown as { __heroT?: number }).__heroT = t as unknown as number;
+      ScrollTrigger.refresh();
     }
     const ctx = gsap.context(() => {
-      gsap.utils.toArray('main section').forEach((sec) => {
-        gsap.from(sec as Element, {
-          y: 50,
-          opacity: 0,
-          duration: 0.9,
-          ease: 'power3.out',
-          scrollTrigger: { trigger: sec as Element, start: 'top 88%' },
+      gsap.utils.toArray('main section:not(:first-child)').forEach((sec) => {
+        gsap.fromTo(sec as Element, { y: 40, opacity: 0 }, {
+          y: 0, opacity: 1, duration: 0.8, ease: 'power3.out', clearProps: 'all',
+          scrollTrigger: { trigger: sec as Element, start: 'top 92%' },
         });
       });
     });
@@ -63,10 +64,10 @@ export default function HomeExact() {
   }, []);
 
   return (
-    <>
+    <div id="nx">
       <div dangerouslySetInnerHTML={{ __html: headerHtml }} />
       <main dangerouslySetInnerHTML={{ __html: mainHtml }} />
       <div dangerouslySetInnerHTML={{ __html: footerHtml }} />
-    </>
+    </div>
   );
 }
