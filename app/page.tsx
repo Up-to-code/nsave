@@ -1,31 +1,9 @@
-import Header from '@/components/Header';
-import Hero from '@/components/Hero';
-import Features from '@/components/Features';
-import Safety from '@/components/Safety';
-import Investors from '@/components/Investors';
-import Faq from '@/components/Faq';
-import Cta from '@/components/Cta';
-import Footer from '@/components/Footer';
-import HomeExact from '@/components/HomeExact';
-
-const USE_EXACT = true;
+import ExactPage from '@/components/ExactPage';
+import header from '@/components/exact/home-header.html';
+import main from '@/components/exact/home-main.html';
+import footer from '@/components/exact/home-footer.html';
 
 export default function HomePage() {
-  if (USE_EXACT) {
-    return <HomeExact />;
-  }
-  return (
-    <div className="min-h-screen flex flex-col bg-white">
-      <Header />
-      <main className="flex-1">
-        <Hero />
-        <Investors />
-        <Features />
-        <Safety />
-        <Faq />
-        <Cta />
-      </main>
-      <Footer />
-    </div>
-  );
+  return <ExactPage header={header} main={main} footer={footer} />;
 }
+
