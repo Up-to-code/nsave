@@ -53,3 +53,7 @@ npm run inject-faq
   hamburger + slide-down panel below the lg breakpoint.
 - The two custom Tailwind component sets from the first attempt (`components/Header.tsx`
   and friends) are no longer referenced by any route.
+
+## Project links
+
+[Source](https://github.com/Up-to-code/nsave) · [Issues](https://github.com/Up-to-code/nsave/issues) · [Public project directory](https://github.com/qentrah/.github/blob/main/profile/PROJECTS.md)
